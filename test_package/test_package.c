@@ -2,27 +2,26 @@
 #include <stdlib.h>
 #include <termcap.h>
 
+
 int main()
 {
-	char buf[1024];
-	char buf2[30];
-	char *ap = buf2;
-	char *clearstr, *gotostr, *standstr, *stendstr;
+	char buf[1024] = {0};
+	char* cl_string, cm_string;
+	int auto_wrap, height, width;
 
 	tgetent(buf, getenv("TERM"));
 
-	clearstr = tgetstr("cl", &ap);
-	gotostr = tgetstr("cm", &ap);
-	standstr = tgetstr("so", &ap);
-	stendstr = tgetstr("se", &ap);
+	cl_string = tgetstr ("cl", NULL);
+	cm_string = tgetstr ("cm", NULL);
+	auto_wrap = tgetflag ("am");
+	height = tgetnum ("li");
+	width = tgetnum ("co");
 
-	fputs(clearstr, stdout);
-	fputs(tgoto(gotostr, 20, 10), stdout);
-	printf("Hello, ");
-	fputs(standstr, stdout);
-	printf("Bincrafters");
-	fputs(stendstr, stdout);
-	putchar('!');
+	printf("cl: %s\n", cl_string);
+	printf("cm: %s\n", cm_string);
+	printf("am: %d\n", auto_wrap);
+	printf("li: %d\n", height);
+	printf("co: %d\n", width);
 
     return EXIT_SUCCESS;
 }
