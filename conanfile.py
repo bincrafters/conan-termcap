@@ -49,6 +49,7 @@ class TermcapConan(ConanFile):
 
     def _configure_autotools(self):
         if not self._autotools:
+            tools.replace_in_file("Makefile.in", "CFLAGS = -g", "")
             self._autotools = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
             self._autotools.configure()
             tools.replace_in_file("Makefile", "libtermcap.a info", "libtermcap.a")
