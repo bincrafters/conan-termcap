@@ -51,6 +51,7 @@ class TermcapConan(ConanFile):
         if not self._autotools:
             self._autotools = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
             self._autotools.configure()
+            tools.replace_in_file("Makefile", "libtermcap.a info", "libtermcap.a")
         return self._autotools
 
     def build(self):
@@ -60,8 +61,9 @@ class TermcapConan(ConanFile):
 
     def package(self):
         self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
-        self.copy(pattern="*.h", dst="include", src=self._source_subfolder)
-        self.copy(pattern="*.a", dst="lib", src=self._source_subfolder)
+        with tools.chdir(self._source_subfolder):
+            autotools = self._configure_autotools()
+            autotools.install()
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)

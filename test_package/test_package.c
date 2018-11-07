@@ -6,7 +6,7 @@
 int main()
 {
 	char buf[1024] = {0};
-	char* cl_string, cm_string;
+	char *cl_string, *cm_string;
 	int auto_wrap, height, width;
 
 	tgetent(buf, getenv("TERM"));
