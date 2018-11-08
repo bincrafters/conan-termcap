@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from conans import ConanFile, AutoToolsBuildEnvironment, tools
+from conans import ConanFile, CMake, AutoToolsBuildEnvironment, tools
 
 
 class TermcapConan(ConanFile):
@@ -15,6 +15,8 @@ class TermcapConan(ConanFile):
     license = "GPL-2.0"
     topics = ("conan", "termcap", "terminal", "display")
     exports = ["LICENSE.md"]
+    exports_sources = "CMakeLists.txt"
+    generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"fPIC": [True, False]}
     default_options = {"fPIC": True}
@@ -55,16 +57,29 @@ class TermcapConan(ConanFile):
             tools.replace_in_file("Makefile", "libtermcap.a info", "libtermcap.a")
         return self._autotools
 
+    def _configure_cmake(self):
+        cmake = CMake(self)
+        cmake.configure()
+        return cmake
+
     def build(self):
-        with tools.chdir(self._source_subfolder):
-            autotools = self._configure_autotools()
-            autotools.make()
+        if self.settings.compiler == "Visual Studio":
+            cmake = self._configure_cmake()
+            cmake.build()
+        else:
+            with tools.chdir(self._source_subfolder):
+                autotools = self._configure_autotools()
+                autotools.make()
 
     def package(self):
         self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
-        with tools.chdir(self._source_subfolder):
-            autotools = self._configure_autotools()
-            autotools.install()
+        if self.settings.compiler == "Visual Studio":
+            cmake = self._configure_cmake()
+            cmake.install()
+        else:
+            with tools.chdir(self._source_subfolder):
+                autotools = self._configure_autotools()
+                autotools.install()
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
