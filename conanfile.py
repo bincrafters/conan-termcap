@@ -36,10 +36,6 @@ class TermcapConan(ConanFile):
     def source(self):
         self._windows_source()
         self._unix_source()
-        if self.settings.os == "Windows":
-            os.rename("src", self._source_subfolder)
-        else:
-            os.rename(self.name + "-" + self.version, self._source_subfolder)
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -62,6 +58,8 @@ class TermcapConan(ConanFile):
         return cmake
 
     def build(self):
+        source_path = "src" if self.settings.os == "Windows" else self.name + "-" + self.version
+        os.rename(source_path, self._source_subfolder)
         if self.settings.compiler == "Visual Studio":
             cmake = self._configure_cmake()
             cmake.build()
