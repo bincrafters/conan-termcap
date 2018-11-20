@@ -27,21 +27,20 @@ class TermcapConan(ConanFile):
         source_url = "https://ftp.gnu.org/gnu/termcap"
         sha256 = "91a0e22e5387ca4467b5bcb18edf1c51b930262fd466d5fda396dd9d26719100"
         tools.get("{}/termcap-{}.tar.gz".format(source_url, self.version), sha256=sha256)
-        extracted_dir = self.name + "-" + self.version
-        os.rename(extracted_dir, self._source_subfolder)
 
     def _windows_source(self):
         source_url = "https://ufpr.dl.sourceforge.net/project/gnuwin32/termcap"
         sha256 = "fda35dfd5952b6b186040201b30d897c5c98bdc6d1865d12f53418b73770d308"
         tools.get("{}/{}/termcap-{}-src.zip".format(source_url, self.version, self.version), sha256=sha256)
-        os.rename("src", self._source_subfolder)
 
     def source(self):
+        self._windows_source()
+        self._unix_source()
         if self.settings.os == "Windows":
-            self._windows_source()
+            os.rename("src", self._source_subfolder)
         else:
-            self._unix_source()
-        
+            os.rename(self.name + "-" + self.version, self._source_subfolder)
+
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
