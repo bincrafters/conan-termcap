@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os
 from conans import ConanFile, CMake, AutoToolsBuildEnvironment, tools
 
@@ -43,6 +40,7 @@ class TermcapConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
+        del self.settings.compiler.cppstd
 
     def _configure_autotools(self):
         if not self._autotools:
