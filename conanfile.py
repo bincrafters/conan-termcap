@@ -8,7 +8,6 @@ class TermcapConan(ConanFile):
     url = "https://github.com/bincrafters/conan-termcap"
     homepage = "https://www.gnu.org/software/termcap"
     description = "Enables programs to use display terminals in a terminal-independent manner"
-    author = "Bincrafters <bincrafters@gmail.com>"
     license = "GPL-2.0"
     topics = ("conan", "termcap", "terminal", "display")
     exports = ["LICENSE.md"]
