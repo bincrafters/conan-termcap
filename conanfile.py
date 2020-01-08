@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os
 from conans import ConanFile, CMake, AutoToolsBuildEnvironment, tools
 
@@ -11,7 +8,6 @@ class TermcapConan(ConanFile):
     url = "https://github.com/bincrafters/conan-termcap"
     homepage = "https://www.gnu.org/software/termcap"
     description = "Enables programs to use display terminals in a terminal-independent manner"
-    author = "Bincrafters <bincrafters@gmail.com>"
     license = "GPL-2.0"
     topics = ("conan", "termcap", "terminal", "display")
     exports = ["LICENSE.md"]
@@ -43,6 +39,7 @@ class TermcapConan(ConanFile):
 
     def configure(self):
         del self.settings.compiler.libcxx
+        del self.settings.compiler.cppstd
 
     def _configure_autotools(self):
         if not self._autotools:
